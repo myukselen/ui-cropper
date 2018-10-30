@@ -1,3 +1,10 @@
+
+## MYN notes
+
+* yarn.lock fails. solution: https://github.com/gulpjs/gulp/issues/2162#issuecomment-384485683
+* node-gyp fails, delete node-gyp in lock
+
+
 ## uiCropper
 
 [![Build Status](https://travis-ci.org/CrackerakiUA/ui-cropper.svg?branch=master)](https://travis-ci.org/CrackerakiUA/ui-cropper)

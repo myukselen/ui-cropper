@@ -300,7 +300,7 @@ angular.module('uiCropper').directive('uiCropper', ['$timeout', 'cropHost', 'cro
                     scope.aspectRatio = parseFloat(scope.aspectRatio);
                 }
                 if (scope.aspectRatio) {
-                    cropHost.setAspect(scope.aspectRatio);
+                    cropHost.setAspect(scope.aspectRatio, true);  // enough for this lovely API :P
                 }
             });
             scope.$watch('allowCropResizeOnCorners', function () {

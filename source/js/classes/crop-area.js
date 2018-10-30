@@ -62,6 +62,7 @@ angular.module('uiCropper').factory('cropArea', ['cropCanvas', function (CropCan
     CropArea.prototype.setSize = function (size) {
         size = this._processSize(size);
         this._size = this._preventBoundaryCollision(size);
+        this._events.trigger('area-resize-end');
     };
     CropArea.prototype.setSizeOnMove = function (size) {
         size = this._processSize(size);

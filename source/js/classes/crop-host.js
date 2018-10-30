@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uiCropper').factory('cropHost', ['$document', '$q', 'cropAreaCircle', 'cropAreaSquare', 'cropAreaRectangle', 'cropEXIF', function ($document, $q, CropAreaCircle, CropAreaSquare, CropAreaRectangle, cropEXIF) {
+angular.module('uiCropper').factory('cropHost', ['$document', '$q', 'cropAreaCircle', 'cropAreaSquare', 'cropAreaRectangle', 'cropAreaRigidRectangle', 'cropEXIF', function ($document, $q, CropAreaCircle, CropAreaSquare, CropAreaRectangle, CropAreaRigidRectangle, cropEXIF) {
     /* STATIC FUNCTIONS */
     var colorPaletteLength = 8;
 
@@ -890,6 +890,8 @@ angular.module('uiCropper').factory('cropHost', ['$document', '$q', 'cropAreaCir
                 AreaClass = CropAreaSquare;
             } else if (type === 'rectangle') {
                 AreaClass = CropAreaRectangle;
+            } else if (type === 'rigid-rectangle') {
+                AreaClass = CropAreaRigidRectangle;
             }
             theArea = new AreaClass(ctx, events);
             theArea.setMinSize(curMinSize);
@@ -948,15 +950,34 @@ angular.module('uiCropper').factory('cropHost', ['$document', '$q', 'cropAreaCir
             colorPaletteLength = lg;
         };
 
-        this.setAspect = function (aspect) {
+        this.setAspect = function (aspect, doCenterArea) {
+            doCenterArea = !!doCenterArea;
             isAspectRatio = true;
             theArea.setAspect(aspect);
+            var canvasSize = theArea.getCanvasSize();
+
             var minSize = theArea.getMinSize();
             minSize.w = minSize.h * aspect;
+            if (minSize.w > canvasSize.w) {
+                minSize = theArea.getMinSize();
+                minSize.h = minSize.w / aspect;
+            }
+
             theArea.setMinSize(minSize);
             var size = theArea.getSize();
             size.w = size.h * aspect;
+            if (size.w > canvasSize.w) {
+                size = theArea.getSize();
+                size.h = size.w / aspect;
+            }
+            if (doCenterArea) {
+                size.x = (canvasSize.w - size.w) / 2;
+                size.y = (canvasSize.h - size.h) / 2;
+                size.x = size.x < 0 ? 0: size.x;
+                size.y = size.y < 0 ? 0: size.y;
+            }
             theArea.setSize(size);
+            drawScene();
         };
 
         /* Life Cycle begins */
